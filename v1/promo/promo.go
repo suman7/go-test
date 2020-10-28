@@ -32,11 +32,27 @@ var activePromotions = map[string]Promotion{
 	"combineCD": Promotion{[]string{C, D}, 0, 30, combineSKUs}, // C & D for 30
 }
 
+// Calculate total for promo of nItems
+func PromoNItems() {
+	fmt.Println("PromoNItems called")
+}
+
+// Calculate total for promo of combineSKUs
+func PromoCombineSKUs() {
+	fmt.Println("PromoCombineSKUs called")
+}
+
 func CalculatePromo(orderItems map[string]int) int {
 	total := 0
 
-	fmt.Println(orderItems)
-	fmt.Println(activePromotions)
+	for _, promo := range activePromotions {
+		switch promo.Type {
+		case nItems:
+			PromoNItems()
+		case combineSKUs:
+			PromoCombineSKUs()
+		}
+	}
 
 	return total
 }
