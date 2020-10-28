@@ -7,7 +7,7 @@ import (
 func TestCalculatePromo(t *testing.T) {
 
 	t.Run("Scenario A", func(t *testing.T) {
-		want := 200
+		want := 100
 		orderItems := map[string]int{
 			"A": 1,
 			"B": 1,

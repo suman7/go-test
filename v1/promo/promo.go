@@ -32,6 +32,14 @@ var activePromotions = map[string]Promotion{
 	"combineCD": Promotion{[]string{C, D}, 0, 30, combineSKUs}, // C & D for 30
 }
 
+// Should be fetched from DB, in real application
+var skuPrice = map[string]int{
+	A: 50,
+	B: 30,
+	C: 20,
+	D: 15,
+}
+
 // Calculate total for promo of nItems
 func PromoNItems(promo Promotion, orderItems *map[string]int, total *int) {
 	// Check if current promo is valid, and apply if valid
@@ -55,6 +63,20 @@ func PromoCombineSKUs(promo Promotion, orderItems *map[string]int, total *int) {
 	fmt.Println(*total)
 }
 
+// Should be a DB fetch logic, in real application
+func GetSKUPrice(sku string) int {
+	return skuPrice[sku]
+}
+
+// Calculate total when no promo offer to apply
+func NoPromoOrder(orderItems *map[string]int, total *int) {
+	// Apply normal price to order
+	for sku, count := range *orderItems {
+
+		*total += GetSKUPrice(sku) * count
+	}
+}
+
 func CalculatePromo(orderItems map[string]int) int {
 	total := 0
 
@@ -68,5 +90,7 @@ func CalculatePromo(orderItems map[string]int) int {
 		}
 	}
 
+	// Update total when no promotion to apply
+	NoPromoOrder(&orderItems, &total)
 	return total
 }
