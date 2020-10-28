@@ -7,5 +7,10 @@ import (
 
 func main() {
 	fmt.Println("Hello, world")
-	promo.CalculatePromo()
+	orderItems := map[string]int{
+		"A": 1,
+		"B": 1,
+		"C": 1,
+	}
+	promo.CalculatePromo(orderItems)
 }

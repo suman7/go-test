@@ -1,5 +1,10 @@
 package promo
 
-func CalculatePromo() int {
+import (
+	"fmt"
+)
+
+func CalculatePromo(orderItems map[string]int) int {
+	fmt.Println(orderItems)
 	return 100
 }
