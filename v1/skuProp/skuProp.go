@@ -1,4 +1,4 @@
-package price
+package skuProp
 
 // Enums for easy handling and avoiding type
 const (
