@@ -46,9 +46,10 @@ func PromoNItems(promo Promotion, orderItems *map[string]int, total *int) {
 	sku := promo.SKUs[0]                                         // this kind of promo always has one SKU, so safe to take 0 index
 	if val, ok := (*orderItems)[sku]; ok && val >= promo.Count { // As orderItems is map, lookup function is O(1)
 		// If SKU found and order count is valid for this promo, lets update thet with promo offer
-		*total += promo.Value
+		promoApplyTimes := val / promo.Count // as same promo can be applied multiple times, if SKU has enough orders
+		*total += promo.Value * promoApplyTimes
 		// We wil also update the new order count, by subtracting SKU counts used the this promo
-		if tmpCount := val - promo.Count; tmpCount > 0 {
+		if tmpCount := val - promo.Count*promoApplyTimes; tmpCount > 0 {
 			(*orderItems)[sku] = tmpCount
 		} else {
 			// If all order count of SKU is used, we can safely remove th SKU from order, it will help to lookup faster
@@ -72,7 +73,6 @@ func GetSKUPrice(sku string) int {
 func NoPromoOrder(orderItems *map[string]int, total *int) {
 	// Apply normal price to order
 	for sku, count := range *orderItems {
-
 		*total += GetSKUPrice(sku) * count
 	}
 }
@@ -88,6 +88,7 @@ func CalculatePromo(orderItems map[string]int) int {
 		case combineSKUs:
 			PromoCombineSKUs(promo, &orderItems, &total)
 		}
+		fmt.Println(total, orderItems)
 	}
 
 	// Update total when no promotion to apply
