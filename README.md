@@ -23,3 +23,9 @@ docker-compose exec go-dev sh
 ```
 go run app
 ```
+
+## To run the test
+
+```
+go test app...
+```
