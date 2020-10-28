@@ -1,5 +1,9 @@
 package promo
 
+import (
+	"app/price"
+)
+
 // Promotion structure
 type Promotion struct {
 	SKUs  []string // e.g. ["A"] or ["C", "D"]
@@ -26,14 +30,6 @@ var activePromotions = map[string]Promotion{
 	"nItemsA":   Promotion{[]string{A}, 3, 130, nItems},        // 3 of A's for 130
 	"nItemsB":   Promotion{[]string{B}, 2, 45, nItems},         // 2 of B's for 45
 	"combineCD": Promotion{[]string{C, D}, 0, 30, combineSKUs}, // C & D for 30
-}
-
-// Should be fetched from DB, in real application
-var skuPrice = map[string]int{
-	A: 50,
-	B: 30,
-	C: 20,
-	D: 15,
 }
 
 // Calculate total for promo of nItems
@@ -89,16 +85,11 @@ func PromoCombineSKUs(promo Promotion, orderItems *map[string]int, total *int) {
 	}
 }
 
-// Should be a DB fetch logic, in real application
-func GetSKUPrice(sku string) int {
-	return skuPrice[sku]
-}
-
 // Calculate total when no promo offer to apply
 func NoPromoOrder(orderItems *map[string]int, total *int) {
 	// Apply normal price to order
 	for sku, count := range *orderItems {
-		*total += GetSKUPrice(sku) * count
+		*total += price.GetSKUPrice(sku) * count
 	}
 }
 
