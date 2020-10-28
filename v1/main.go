@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/promo"
+	"fmt"
 )
 
 func main() {
@@ -10,5 +11,6 @@ func main() {
 		"B": 1,
 		"C": 1,
 	}
-	promo.CalculatePromo(orderItems)
+	total := promo.CalculatePromo(orderItems)
+	fmt.Println(total, orderItems)
 }
