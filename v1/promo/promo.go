@@ -5,6 +5,16 @@ import (
 	"app/skuProp"
 )
 
+func updateOrderItem(val, promoApplyTimes, count int, sku string, orderItems *map[string]int) {
+	// We wil also update the new order count, by subtracting SKU counts used the this promo
+	if tmpCount := val - count*promoApplyTimes; tmpCount > 0 {
+		(*orderItems)[sku] = tmpCount
+	} else {
+		// If all order count of SKU is used, we can safely remove th SKU from order, it will help to lookup faster
+		delete((*orderItems), sku)
+	}
+}
+
 // Calculate total for promo of nItems
 func PromoNItems(promo promoProp.Promotion, orderItems *map[string]int, total *int) {
 	// Check if current promo is valid, and apply if valid
@@ -13,13 +23,7 @@ func PromoNItems(promo promoProp.Promotion, orderItems *map[string]int, total *i
 		// If SKU found and order count is valid for this promo, lets update thet with promo offer
 		promoApplyTimes := val / promo.Count // as same promo can be applied multiple times, if SKU has enough orders
 		*total += promo.Value * promoApplyTimes
-		// We wil also update the new order count, by subtracting SKU counts used the this promo
-		if tmpCount := val - promo.Count*promoApplyTimes; tmpCount > 0 {
-			(*orderItems)[sku] = tmpCount
-		} else {
-			// If all order count of SKU is used, we can safely remove th SKU from order, it will help to lookup faster
-			delete((*orderItems), sku)
-		}
+		updateOrderItem(val, promoApplyTimes, promo.Count, sku, orderItems)
 	}
 
 }
@@ -48,11 +52,7 @@ func PromoCombineSKUs(promo promoProp.Promotion, orderItems *map[string]int, tot
 		if applyPromo {
 			*total += promo.Value * promoApplyTimes
 			for _, sku := range promo.SKUs {
-				if tmpCount := (*orderItems)[sku] - promoApplyTimes; tmpCount > 0 {
-					(*orderItems)[sku] = tmpCount
-				} else {
-					delete((*orderItems), sku)
-				}
+				updateOrderItem((*orderItems)[sku], promoApplyTimes, 1, sku, orderItems)
 			}
 		}
 	}

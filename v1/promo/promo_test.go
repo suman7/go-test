@@ -6,6 +6,13 @@ import (
 
 func TestCalculatePromo(t *testing.T) {
 
+	assertSuccess := func(t testing.TB, got, want int) {
+		t.Helper()
+		if got != want {
+			t.Errorf("got %d want %d", got, want)
+		}
+	}
+
 	t.Run("Scenario A", func(t *testing.T) {
 		want := 100
 		orderItems := map[string]int{
@@ -14,9 +21,7 @@ func TestCalculatePromo(t *testing.T) {
 			"C": 1,
 		}
 		got := CalculatePromo(orderItems)
-		if got != want {
-			t.Errorf("wanted %d but got %d", want, got)
-		}
+		assertSuccess(t, got, want)
 	})
 
 	t.Run("Scenario B", func(t *testing.T) {
@@ -27,9 +32,7 @@ func TestCalculatePromo(t *testing.T) {
 			"C": 1,
 		}
 		got := CalculatePromo(orderItems)
-		if got != want {
-			t.Errorf("wanted %d but got %d", want, got)
-		}
+		assertSuccess(t, got, want)
 	})
 
 	t.Run("Scenario C", func(t *testing.T) {
@@ -41,9 +44,7 @@ func TestCalculatePromo(t *testing.T) {
 			"D": 1,
 		}
 		got := CalculatePromo(orderItems)
-		if got != want {
-			t.Errorf("wanted %d but got %d", want, got)
-		}
+		assertSuccess(t, got, want)
 	})
 
 }
