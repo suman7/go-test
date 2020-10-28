@@ -7,8 +7,8 @@ import (
 
 func main() {
 	orderItems := map[string]int{
-		"A": 1,
-		"B": 1,
+		"A": 3,
+		"B": 2,
 		"C": 1,
 	}
 	total := promo.CalculatePromo(orderItems)

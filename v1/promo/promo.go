@@ -33,24 +33,38 @@ var activePromotions = map[string]Promotion{
 }
 
 // Calculate total for promo of nItems
-func PromoNItems() {
-	fmt.Println("PromoNItems called")
+func PromoNItems(promo Promotion, orderItems *map[string]int, total *int) {
+	// Check if current promo is valid, and apply if valid
+	sku := promo.SKUs[0]                                         // this kind of promo always has one SKU, so safe to take 0 index
+	if val, ok := (*orderItems)[sku]; ok && val >= promo.Count { // As orderItems is map, lookup function is O(1)
+		// If SKU found and order count is valid for this promo, lets update thet with promo offer
+		*total += promo.Value
+		// We wil also update the new order count, by subtracting SKU counts used the this promo
+		if tmpCount := val - promo.Count; tmpCount > 0 {
+			(*orderItems)[sku] = tmpCount
+		} else {
+			// If all order count of SKU is used, we can safely remove th SKU from order, it will help to lookup faster
+			delete((*orderItems), sku)
+		}
+	}
+
 }
 
 // Calculate total for promo of combineSKUs
-func PromoCombineSKUs() {
-	fmt.Println("PromoCombineSKUs called")
+func PromoCombineSKUs(promo Promotion, orderItems *map[string]int, total *int) {
+	fmt.Println(*total)
 }
 
 func CalculatePromo(orderItems map[string]int) int {
 	total := 0
 
+	// Apply promotion offer
 	for _, promo := range activePromotions {
 		switch promo.Type {
 		case nItems:
-			PromoNItems()
+			PromoNItems(promo, &orderItems, &total)
 		case combineSKUs:
-			PromoCombineSKUs()
+			PromoCombineSKUs(promo, &orderItems, &total)
 		}
 	}
 
