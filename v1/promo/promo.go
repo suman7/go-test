@@ -1,9 +1,5 @@
 package promo
 
-import (
-	"fmt"
-)
-
 // Promotion structure
 type Promotion struct {
 	SKUs  []string // e.g. ["A"] or ["C", "D"]
@@ -61,7 +57,36 @@ func PromoNItems(promo Promotion, orderItems *map[string]int, total *int) {
 
 // Calculate total for promo of combineSKUs
 func PromoCombineSKUs(promo Promotion, orderItems *map[string]int, total *int) {
-	fmt.Println(*total)
+	// Check if this promo is valid, by checking if one of the promo SKU exists in order
+	if val, ok := (*orderItems)[promo.SKUs[0]]; ok && val >= 1 {
+		promoApplyTimes := val // as same promo can be applied multiple times, if SKU has enough orders
+		// some Flag to apply promo, as we can break out of this loop if invalid, but not the function
+		applyPromo := true
+		// Loop through rest of the promo combination to check if they exist and valid
+		for _, sku := range promo.SKUs[1:] {
+			if val, ok = (*orderItems)[sku]; ok && val >= 1 {
+				// We will consider the min of all SKU values, as the promo is a combination promo
+				if promoApplyTimes < val {
+					promoApplyTimes = val
+				}
+			} else {
+				applyPromo = false
+				break
+			}
+		}
+
+		// If all SKUs exist in the order, we will apply this promo
+		if applyPromo {
+			*total += promo.Value * promoApplyTimes
+			for _, sku := range promo.SKUs {
+				if tmpCount := (*orderItems)[sku] - promoApplyTimes; tmpCount > 0 {
+					(*orderItems)[sku] = tmpCount
+				} else {
+					delete((*orderItems), sku)
+				}
+			}
+		}
+	}
 }
 
 // Should be a DB fetch logic, in real application
@@ -88,7 +113,6 @@ func CalculatePromo(orderItems map[string]int) int {
 		case combineSKUs:
 			PromoCombineSKUs(promo, &orderItems, &total)
 		}
-		fmt.Println(total, orderItems)
 	}
 
 	// Update total when no promotion to apply
