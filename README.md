@@ -29,3 +29,9 @@ go run app
 ```
 go test app...
 ```
+
+## To build executable
+Note: For the sake of simplicity, it doesnot run with argument yet.
+```
+go build
+```
