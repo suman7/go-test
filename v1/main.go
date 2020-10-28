@@ -7,5 +7,5 @@ import (
 
 func main() {
 	fmt.Println("Hello, world")
-	promo.Promo()
+	promo.CalculatePromo()
 }

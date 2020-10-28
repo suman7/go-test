@@ -1,9 +1,5 @@
 package promo
 
-import (
-	"fmt"
-)
-
-func Promo() {
-	fmt.Println("Hello, promo")
+func CalculatePromo() int {
+	return 100
 }
