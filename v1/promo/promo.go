@@ -6,5 +6,5 @@ import (
 
 func CalculatePromo(orderItems map[string]int) int {
 	fmt.Println(orderItems)
-	return 100
+	return 10
 }
