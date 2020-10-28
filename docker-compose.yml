@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  go-dev:
+    build:
+      context: .
+    container_name: go-dev
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./v1:/go/src/app
